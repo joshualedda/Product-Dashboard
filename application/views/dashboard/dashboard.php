@@ -39,7 +39,7 @@
 								<?php foreach ($products as $product) : ?>
 									<tr>
 										<td><?= $product['id']; ?></td>
-										<td><?= $product['name']; ?></td>
+										<td><a href="<?=base_url('product/show/' . $product['id'] ); ?>"><?= $product['name']; ?></a></td>
 										<td><?= $product['quantity']; ?></td>
 										<td><?= $product['total_sold']; ?></td>
 										<?php if ($role == 0) : ?>

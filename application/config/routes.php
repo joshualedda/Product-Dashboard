@@ -16,12 +16,22 @@ $route['logout'] = 'users/logout';
 
 //products list
 $route['default_controller'] = 'products';
-//product view
-$route['product/details/(:any)'] = 'Products/details/$1';
+
 //product add
 $route['products/new'] = 'products/addProduct';
 //product create
 $route['products/create'] = 'products/createProduct';
+
+//product view
+$route['product/show/(:num)'] = 'Products/show/$1';
+
+
+
+
+
+
+
+
 
 //product edit test purpsoes
 $routes['products/updateProduct/(:num)'] = 'Products/updateProduct/$1';

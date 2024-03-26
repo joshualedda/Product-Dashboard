@@ -23,7 +23,7 @@ class Products extends CI_Controller
 	}
 
 
-	public function details($product_id)
+	public function show($product_id)
 	{
 		$this->crsf();
 
@@ -58,6 +58,8 @@ class Products extends CI_Controller
 
 	public function createProduct()
 	{
+		$this->crsf();
+
 		$name = $this->input->post('name');
 		$description = $this->input->post('description');
 		$price = $this->input->post('price');
@@ -92,6 +94,8 @@ class Products extends CI_Controller
 	//update product
 	public function updateProduct($id)
 	{
+		$this->crsf();
+
 		$name = $this->input->post('name');
 		$description = $this->input->post('description');
 		$price = $this->input->post('price');
