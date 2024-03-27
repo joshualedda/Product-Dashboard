@@ -5,14 +5,11 @@ class Product extends CI_Model
 
 	public function __construct()
 	{
-		$this->load->library('form_validation');
-
 		$this->load->database();
 	}
 	//select product
 	public function fetchProducts()
 	{
-		// Select product data and calculate total quantity sold
 		$sql = 'SELECT products.*, 
 				COALESCE((SELECT SUM(quantity) FROM orders WHERE orders.product_id = products.id), 0) AS total_sold 
 				FROM products';
@@ -20,10 +17,33 @@ class Product extends CI_Model
 		return $query->result_array();
 	}
 
+	public function searchProducts($keyword) {
+		$escaped_keyword = $this->db->escape_like_str($keyword);
+	
+		$sql = "SELECT products.*, 
+				COALESCE((SELECT SUM(quantity) FROM orders WHERE orders.product_id = products.id), 0) AS total_sold 
+				FROM products 
+				WHERE name LIKE '%$escaped_keyword%'";
+		
+		$query = $this->db->query($sql);
+		
+		return $query->result_array();
+	}
+	
+	
+
 	//fetch singel product
 	public function getProductDetails($product_id)
 	{
-		$sql = "SELECT * FROM products WHERE id = ?";
+		$sql = "SELECT products.*, 
+                   SUM(orders.quantity) AS total_sold, 
+                   products.created_at AS productCreated,
+                   products.id AS productId
+            FROM products
+            LEFT JOIN orders ON products.id = orders.product_id
+            WHERE products.id = ?
+            GROUP BY productId";
+
 		$query = $this->db->query($sql, array($product_id));
 
 		if ($query->num_rows() == 1) {
@@ -32,6 +52,8 @@ class Product extends CI_Model
 			return null;
 		}
 	}
+
+
 
 	/*Product Price*/
 	public function getProductPrice($product_ids)
@@ -98,8 +120,8 @@ class Product extends CI_Model
 		} else {
 			$name = $this->db->escape_str($name);
 			$description = $this->db->escape_str($description);
-			$price = (float) $price; 
-			$quantity = (int) $quantity; 
+			$price = (float) $price;
+			$quantity = (int) $quantity;
 
 			$sql = "UPDATE products SET name = ?, description = ?, price = ?, quantity = ? WHERE id = ?";
 			$query = $this->db->query($sql, array($name, $description, $price, $quantity, $id));
@@ -118,16 +140,16 @@ class Product extends CI_Model
 		if (!is_numeric($id) || $id <= 0) {
 			return array('success' => false, 'error' => 'Invalid product ID.');
 		}
-	
+
 		$sql = "DELETE FROM products WHERE id = ?";
 		$query = $this->db->query($sql, array($id));
-	
+
 		if ($this->db->affected_rows() > 0) {
 			return array('success' => true);
 		} else {
 			return array('success' => false, 'error' => 'Error deleting product.');
 		}
 	}
-	
+
 
 }

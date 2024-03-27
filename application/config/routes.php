@@ -25,6 +25,11 @@ $route['products/create'] = 'products/createProduct';
 //product view
 $route['product/show/(:num)'] = 'Products/show/$1';
 
+//reviews
+$route['review'] = 'reviews/create';
+//reply
+$route['reply'] = 'replies/create';
+
 
 
 
@@ -55,3 +60,5 @@ $route['changePassword']= 'dashboards/changePassword';
 
 //user dashboard
 $route['dashboard']= 'dashboards';
+
+

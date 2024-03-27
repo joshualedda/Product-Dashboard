@@ -7,7 +7,7 @@
 				</div>
 
 				<div class="card-body">
-					<form action="<?= base_url('products/updateProduct/' . $product['id']); ?>" method="POST">
+					<form id="editProductForm" action="<?= base_url('products/updateProduct/' . $product['id']); ?>" method="POST">
 					
 					<input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
 
@@ -33,7 +33,7 @@
 
 						<div class="d-flex justify-content-end my-3">
 							<a href="<?= base_url('dashboard/admin'); ?>" class="btn btn-success btn-sm mx-2">Back</a>
-							<input type="submit" name="submit" class="btn btn-sm btn-success" value="Update Product" />
+							<input id="editBtn" type="submit" name="submit" class="btn btn-sm btn-success" value="Update Product" />
 						</div>
 					</form>
 
@@ -42,3 +42,41 @@
 		</div>
 	</div>
 </div>
+
+
+
+<script>
+	$(document).ready(function() {
+    $('#editBtn').click(function(e) {
+        e.preventDefault();
+
+        var formData = $('#editProductForm').serialize();
+
+        $.ajax({
+            url: $('#editProductForm').attr('action'),
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                $('#alertMessage')
+                    .removeClass('alert-warning')
+                    .addClass('alert-success')
+                    .text('Product Updated Succesfully!')
+                    .removeClass('d-none')
+                    .fadeOut(3000); // Fade out in 3 seconds
+
+                $("#productForm")[0].reset(); // Clear form fields
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                $('#alertMessage')
+                    .removeClass('alert-warning')
+                    .addClass('alert-danger')
+                    .text('An error occurred while adding the product.')
+                    .removeClass('d-none')
+                    .fadeIn();
+            }
+        });
+    });
+});
+
+</script>

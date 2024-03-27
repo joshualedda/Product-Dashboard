@@ -5,19 +5,33 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Dashboards extends CI_Controller
 {
 
-	public function index()
-	{
-		$data = $this->prepareUserData();
-		$data['products'] = $this->Product->fetchProducts();
+	public function index() {
+        $data = $this->prepareUserData();
+        $data['products'] = $this->Product->fetchProducts();
 
+        // Load views
+        $this->load->view('partials/header', $data);
+        $this->load->view('partials/navbar', $data);
+        $this->load->view('partials/alert');
+        $this->load->view('dashboard/dashboard', $data);
+        $this->load->view('partials/footer');
+    }
 
-		$this->load->view('partials/header', $data);
-		$this->load->view('partials/navbar', $data);
-		$this->load->view('partials/alert');
+    public function search() {
+        $keyword = $this->input->get('keyword');
 
-		$this->load->view('dashboard/dashboard', $data);
-		$this->load->view('partials/footer');
-	}
+        // Perform search based on the keyword
+        $data = $this->prepareUserData();
+        $data['products'] = $this->Product->searchProducts($keyword);
+
+        // Load views with filtered data
+        $this->load->view('partials/header', $data);
+        $this->load->view('partials/navbar', $data);
+        $this->load->view('partials/alert');
+        $this->load->view('dashboard/dashboard', $data); // You might want to create a separate view for search results
+        $this->load->view('partials/footer');
+    }
+
 	private function prepareUserData()
 	{
 		$user_id = $this->session->userdata('id');
